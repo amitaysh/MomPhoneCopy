@@ -1,6 +1,6 @@
 ﻿namespace androidCopy
 {
-    partial class Form1
+    partial class WelcomeForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,38 +37,43 @@
             // 
             this.backupBtn.Location = new System.Drawing.Point(12, 92);
             this.backupBtn.Name = "backupBtn";
+            this.backupBtn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.backupBtn.Size = new System.Drawing.Size(180, 23);
             this.backupBtn.TabIndex = 0;
             this.backupBtn.Text = "לגבות תמונות מהטלפון למחשב";
             this.backupBtn.UseVisualStyleBackColor = true;
+            this.backupBtn.Click += new System.EventHandler(this.backupBtn_Click);
             // 
             // developBtn
             // 
             this.developBtn.Location = new System.Drawing.Point(12, 126);
             this.developBtn.Name = "developBtn";
+            this.developBtn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.developBtn.Size = new System.Drawing.Size(180, 23);
             this.developBtn.TabIndex = 1;
             this.developBtn.Text = "להעביר תמונות לפיתוח";
             this.developBtn.UseVisualStyleBackColor = true;
+            this.developBtn.Click += new System.EventHandler(this.developBtn_Click);
             // 
             // welcomeText
             // 
             this.welcomeText.AutoSize = true;
             this.welcomeText.Location = new System.Drawing.Point(117, 25);
             this.welcomeText.Name = "welcomeText";
+            this.welcomeText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.welcomeText.Size = new System.Drawing.Size(57, 13);
             this.welcomeText.TabIndex = 2;
             this.welcomeText.Text = "בוקר טוב!";
             // 
-            // Form1
+            // WelcomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(200, 164);
             this.Controls.Add(this.welcomeText);
             this.Controls.Add(this.developBtn);
             this.Controls.Add(this.backupBtn);
-            this.Name = "Form1";
+            this.Name = "WelcomeForm";
             this.Text = "תמונות";
             this.ResumeLayout(false);
             this.PerformLayout();
