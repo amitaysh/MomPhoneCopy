@@ -23,7 +23,6 @@ namespace androidCopy
             dateTimePicker1.Visible = false;
             RunBackupBtn.Visible = false;
             WaitForUsb();
-            UpdateStatus();
         }
 
         private string FindLatestBackup()
@@ -50,9 +49,17 @@ namespace androidCopy
                 var progressBarValue = Math.Ceiling(p);
                 foreach (var file in files)
                 {
+                    var duplicate = 1;
                     if (file.LastWriteTime.Date >= dateTimePicker1.Value)
                     {
-                        File.Copy(file.FullName, todayPath.FullName + "\\" + file.Name, true);
+                        var newFullPath = todayPath.FullName + "\\" + file.Name;
+                        while (File.Exists(newFullPath))
+                        {
+                            var tempFileName = $"{Path.GetFileNameWithoutExtension(file.Name)}({duplicate++})";
+                            newFullPath = Path.Combine(todayPath.FullName, tempFileName + file.Extension);
+                        }
+
+                        File.Copy(file.FullName, newFullPath);
                         if (progressBar1.Value + progressBarValue < 100)
                             progressBar1.Value += Convert.ToInt32(progressBarValue);
                         counter++;
