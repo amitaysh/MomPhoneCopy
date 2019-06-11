@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Management;
+using System.IO;
 
 namespace androidCopy
 {
@@ -16,6 +17,29 @@ namespace androidCopy
         public WelcomeForm()
         {
             InitializeComponent();
+            WelcomeMessage();
+        }
+
+        private void WelcomeMessage()
+        {
+            if (DateTime.Now.Hour < 12)
+            {
+                MorningWelcomeText.Visible = true;
+                noonWelcomeText.Visible = false;
+                EveWelcomeText.Visible = false;
+            }
+            else if (DateTime.Now.Hour < 18)
+            {
+                MorningWelcomeText.Visible = false;
+                noonWelcomeText.Visible = true;
+                EveWelcomeText.Visible = false;
+            }
+            else
+            {
+                MorningWelcomeText.Visible = false;
+                noonWelcomeText.Visible = false;
+                EveWelcomeText.Visible = true;
+            }
         }
 
         private void backupBtn_Click(object sender, EventArgs e)
@@ -30,19 +54,17 @@ namespace androidCopy
             developForm.ShowDialog();
         }
 
-        private void WaitForUsb()
+        private long GetTotalFreeSpace(string driveName)
         {
-            var watcher = new ManagementEventWatcher();
-            var query = new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType = 2");
-            //watcher.EventArrived += new EventArrivedEventHandler(blah);
-            watcher.EventArrived += WatcherOnEventArrived;
-            watcher.Query = query;
-            watcher.Start();
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady && drive.Name == driveName)
+                {
+                    return drive.AvailableFreeSpace;
+                }
+            }
+            return -1;
         }
 
-        private void WatcherOnEventArrived(object sender, EventArrivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
