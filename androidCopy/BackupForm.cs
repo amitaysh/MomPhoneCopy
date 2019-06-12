@@ -9,9 +9,9 @@ namespace androidCopy
     public partial class BackupForm : Form
     {
         public static string DriveLetter;
-        string _toPath = System.Configuration.ConfigurationSettings.AppSettings["BackupToFolder"];
-        string _fromPaths = System.Configuration.ConfigurationSettings.AppSettings["BackupFromFolders"];
-        string _fileType = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
+        readonly string _toPath = System.Configuration.ConfigurationSettings.AppSettings["BackupToFolder"];
+        readonly string _fromPaths = System.Configuration.ConfigurationSettings.AppSettings["BackupFromFolders"];
+        readonly string _fileType = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
 
         public BackupForm()
         {
