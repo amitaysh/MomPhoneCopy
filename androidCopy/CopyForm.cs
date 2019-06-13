@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,8 +12,9 @@ namespace androidCopy
     public partial class CopyForm : Form
     {
         readonly string _toPath = System.Configuration.ConfigurationSettings.AppSettings["BackupToFolder"];
-        readonly string _fileType = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
-        private readonly Dictionary<PictureBox, PictureBox> _dict = new Dictionary<PictureBox, PictureBox>();
+        readonly string _fileTypes = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
+        public static Dictionary<PictureBox, PictureBox> Dict = new Dictionary<PictureBox, PictureBox>();
+        private string _date;
         public CopyForm()
         {
             InitializeComponent();
@@ -40,28 +43,57 @@ namespace androidCopy
         {
             getPhotosFromPcBtn.Enabled = false;
             datesDropDown.Enabled = false;
+            Application.EnableVisualStyles();
+            collectPhotosProgressBar.Style = ProgressBarStyle.Marquee;
+            collectPhotosProgressBar.Visible = true;
+            waitText.Visible = true;
             panel1.Controls.Clear();
-            var photos = new DirectoryInfo(_toPath + "\\" + datesDropDown.Text).GetFiles(_fileType, SearchOption.AllDirectories)
-                .OrderByDescending(d => d.LastWriteTimeUtc);
+            Application.DoEvents();
+            _date = datesDropDown.Text;
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += BwOnDoWork;
+            bw.RunWorkerCompleted += BwOnRunWorkerCompleted;
+            bw.RunWorkerAsync();
+        }
+
+        private void BwOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            collectPhotosProgressBar.Style = ProgressBarStyle.Blocks;
+            collectPhotosProgressBar.Value = 100;
+            waitText.Visible = false;
+        }
+
+        private void BwOnDoWork(object sender, DoWorkEventArgs e)
+        {
+            var counter = 0;
             var nextPhotoLocation = new Point(3, 3);
-            foreach (var photo in photos)
+            foreach (var fileType in _fileTypes.Split('|'))
             {
-                var img = Image.FromFile(photo.FullName);
-                var size = SetPhotoOrientation(img);
-                var pic = new PictureBox
+                var photos = new DirectoryInfo(_toPath + "\\" + _date).GetFiles(fileType, SearchOption.AllDirectories)
+                    .OrderByDescending(d => d.LastWriteTimeUtc);
+                foreach (var photo in photos)
                 {
-                    Image = img,
-                    BackColor = Color.Black,
-                    Size = size,
-                    Location = SetPhotoToMiddle(nextPhotoLocation, size),
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Tag = photo.FullName
-                };
-                pic.MouseClick += PicOnMouseClick;
-                pic.MouseDoubleClick += PicOnMouseClick;
-                panel1.Controls.Add(pic);
-                nextPhotoLocation = CalcNextPhotoLocation(nextPhotoLocation);
+                    counter++;
+                    var img = Image.FromFile(photo.FullName);
+                    var size = SetPhotoOrientation(img);
+                    var smallImg = img.GetThumbnailImage(size.Width, size.Height, () => false, IntPtr.Zero);
+                    var pic = new PictureBox
+                    {
+                        Image = smallImg,
+                        BackColor = Color.Black,
+                        Size = size,
+                        Location = SetPhotoToMiddle(nextPhotoLocation, size),
+                        SizeMode = PictureBoxSizeMode.StretchImage,
+                        Tag = photo.FullName
+                    };
+                    pic.MouseClick += PicOnMouseClick;
+                    pic.MouseDoubleClick += PicOnMouseClick;
+                    panel1.Invoke(new MethodInvoker(delegate { panel1.Controls.Add(pic); }));
+
+                    nextPhotoLocation = CalcNextPhotoLocation(nextPhotoLocation);
+                }
             }
+            numberOfPhotosText.Invoke(new MethodInvoker(delegate{numberOfPhotosText.Text = $@"נמצאו {counter} תמונות";}));
         }
 
         private Size SetPhotoOrientation(Image img)
@@ -70,7 +102,7 @@ namespace androidCopy
                 return new Size(60, 100);
             if (img.Width > img.Height)
                 return new Size(100, 60);
-            return new Size(100, 100);
+            return new Size(90, 90);
         }
 
         private Point CalcNextPhotoLocation(Point prevPhotoLocation)
@@ -86,7 +118,7 @@ namespace androidCopy
                 return new Point(location.X + 20, location.Y);
             if (size.Height < size.Width)
                 return new Point(location.X, location.Y + 20);
-            return location;
+            return new Point(location.X + 5, location.Y + 5);
         }
 
         private Point SetRectangleToMiddle(Point location, Size size)
@@ -95,7 +127,7 @@ namespace androidCopy
                 return new Point(location.X - 20, location.Y);
             if (size.Height < size.Width)
                 return new Point(location.X, location.Y - 20);
-            return location;
+            return new Point(location.X - 5, location.Y - 5);
         }
 
         private void PicOnMouseClick(object sender, MouseEventArgs e)
@@ -106,14 +138,19 @@ namespace androidCopy
                 {
                     var control = (Control) sender;
                     var pb = (PictureBox) control;
-                    var img = pb.Image;
+                    var img = Image.FromFile(pb.Tag.ToString());
                     form.StartPosition = FormStartPosition.CenterScreen;
-                    form.Size = img.Size;
+                    var screenSize = Screen.PrimaryScreen.WorkingArea.Size;
+                    if (img.Size.Width >= screenSize.Width || img.Size.Height >= screenSize.Height)
+                        form.Size = screenSize;
+                    else
+                        form.Size = img.Size;
 
                     pb = new PictureBox
                     {
                         Dock = DockStyle.Fill,
-                        Image = img
+                        Image = img,
+                        SizeMode = PictureBoxSizeMode.StretchImage
                     };
 
                     form.Controls.Add(pb);
@@ -132,16 +169,17 @@ namespace androidCopy
                     Location = SetRectangleToMiddle(pb.Location, pb.Size),
                     SizeMode = PictureBoxSizeMode.StretchImage
                 };
-                //var rect = new Rectangle(SetRectangleToMiddle(control.Location, pb.Size), new Size(100, 100));
-                if (_dict.ContainsKey(pb))
+                if (Dict.ContainsKey(pb))
                 {
-                    panel1.Controls.Remove(_dict[pb]);
-                    _dict.Remove(pb);
+                    panel1.Controls.Remove(Dict[pb]);
+                    Dict.Remove(pb);
+                    numberOfSelectedPhotosText.Invoke(new MethodInvoker(delegate { numberOfSelectedPhotosText.Text = $@"נבחרו {Dict.Count} תמונות"; }));
                 }
                 else
                 {
-                    _dict.Add(pb, v);
+                    Dict.Add(pb, v);
                     panel1.Controls.Add(v);
+                    numberOfSelectedPhotosText.Invoke(new MethodInvoker(delegate { numberOfSelectedPhotosText.Text = $@"נבחרו {Dict.Count} תמונות"; }));
                 }
             }
 
@@ -150,7 +188,8 @@ namespace androidCopy
 
         private void doneBtn_Click(object sender, EventArgs e)
         {
-
+            var done = new DiskOnKeyForm();
+            done.ShowDialog();
         }
     }
 }

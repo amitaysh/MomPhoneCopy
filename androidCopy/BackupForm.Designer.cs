@@ -111,7 +111,7 @@
             this.Controls.Add(this.dateBackupText);
             this.Controls.Add(this.PhoneConnectText);
             this.Name = "BackupForm";
-            this.Text = "BackupForm";
+            this.Text = "גיבוי תמונות למחשב";
             this.ResumeLayout(false);
             this.PerformLayout();
 

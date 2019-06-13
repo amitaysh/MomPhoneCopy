@@ -1,6 +1,6 @@
 ﻿namespace androidCopy
 {
-    partial class diskOnKeyForm
+    partial class DiskOnKeyForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             this.usbConnectText = new System.Windows.Forms.Label();
             this.copyText = new System.Windows.Forms.Label();
-            this.freeSpaceUsd = new System.Windows.Forms.ProgressBar();
+            this.copyFilesProgressBar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // usbConnectText
@@ -54,27 +54,29 @@
             this.copyText.Size = new System.Drawing.Size(377, 52);
             this.copyText.TabIndex = 2;
             this.copyText.Text = "יופי תודה!\r\nאני אצור תיקייה בפנים עם התאריך של היום כדי שיהיה קל.\r\nאחר כך בחנות צ" +
-    "ילום פשוט תבחרי את התיקייה עם התאריך של היום וזהו!\r\nדרך אגב זה המקום הפנוי שנשאר" +
-    " בדיסק-און-קי, מדי פעם צריך למחוק.";
+    "ילום פשוט תבחרי את התיקייה עם התאריך של היום וזהו!\r\nאז רגע, מעתיקים... נא להמתין" +
+    "!";
             this.copyText.Visible = false;
             // 
-            // freeSpaceUsd
+            // copyFilesProgressBar
             // 
-            this.freeSpaceUsd.Location = new System.Drawing.Point(12, 103);
-            this.freeSpaceUsd.Name = "freeSpaceUsd";
-            this.freeSpaceUsd.Size = new System.Drawing.Size(459, 23);
-            this.freeSpaceUsd.TabIndex = 3;
+            this.copyFilesProgressBar.Location = new System.Drawing.Point(12, 103);
+            this.copyFilesProgressBar.Name = "copyFilesProgressBar";
+            this.copyFilesProgressBar.Size = new System.Drawing.Size(459, 23);
+            this.copyFilesProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.copyFilesProgressBar.TabIndex = 3;
+            this.copyFilesProgressBar.Visible = false;
             // 
-            // diskOnKeyForm
+            // DiskOnKeyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(483, 168);
-            this.Controls.Add(this.freeSpaceUsd);
+            this.ClientSize = new System.Drawing.Size(483, 143);
+            this.Controls.Add(this.copyFilesProgressBar);
             this.Controls.Add(this.copyText);
             this.Controls.Add(this.usbConnectText);
-            this.Name = "diskOnKeyForm";
-            this.Text = "diskOnKeyForm";
+            this.Name = "DiskOnKeyForm";
+            this.Text = "העתקת קבצים לדיסק-און-קי";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -84,6 +86,6 @@
 
         private System.Windows.Forms.Label usbConnectText;
         private System.Windows.Forms.Label copyText;
-        private System.Windows.Forms.ProgressBar freeSpaceUsd;
+        private System.Windows.Forms.ProgressBar copyFilesProgressBar;
     }
 }

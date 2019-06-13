@@ -34,6 +34,10 @@
             this.getPhotosFromPcBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.doneBtn = new System.Windows.Forms.Button();
+            this.waitText = new System.Windows.Forms.Label();
+            this.collectPhotosProgressBar = new System.Windows.Forms.ProgressBar();
+            this.numberOfPhotosText = new System.Windows.Forms.Label();
+            this.numberOfSelectedPhotosText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -85,11 +89,55 @@
             this.doneBtn.UseVisualStyleBackColor = true;
             this.doneBtn.Click += new System.EventHandler(this.doneBtn_Click);
             // 
+            // waitText
+            // 
+            this.waitText.AutoSize = true;
+            this.waitText.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.waitText.ForeColor = System.Drawing.Color.Red;
+            this.waitText.Location = new System.Drawing.Point(32, 43);
+            this.waitText.Name = "waitText";
+            this.waitText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.waitText.Size = new System.Drawing.Size(295, 31);
+            this.waitText.TabIndex = 5;
+            this.waitText.Text = "רגע עדיין אוסף תמונות!";
+            this.waitText.Visible = false;
+            // 
+            // collectPhotosProgressBar
+            // 
+            this.collectPhotosProgressBar.Location = new System.Drawing.Point(32, 77);
+            this.collectPhotosProgressBar.Name = "collectPhotosProgressBar";
+            this.collectPhotosProgressBar.Size = new System.Drawing.Size(289, 23);
+            this.collectPhotosProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.collectPhotosProgressBar.TabIndex = 6;
+            this.collectPhotosProgressBar.Visible = false;
+            // 
+            // numberOfPhotosText
+            // 
+            this.numberOfPhotosText.AutoSize = true;
+            this.numberOfPhotosText.Location = new System.Drawing.Point(560, 443);
+            this.numberOfPhotosText.Name = "numberOfPhotosText";
+            this.numberOfPhotosText.Size = new System.Drawing.Size(87, 13);
+            this.numberOfPhotosText.TabIndex = 7;
+            this.numberOfPhotosText.Text = "נמצאו 0 תמונות";
+            // 
+            // numberOfSelectedPhotosText
+            // 
+            this.numberOfSelectedPhotosText.AutoSize = true;
+            this.numberOfSelectedPhotosText.Location = new System.Drawing.Point(407, 443);
+            this.numberOfSelectedPhotosText.Name = "numberOfSelectedPhotosText";
+            this.numberOfSelectedPhotosText.Size = new System.Drawing.Size(85, 13);
+            this.numberOfSelectedPhotosText.TabIndex = 8;
+            this.numberOfSelectedPhotosText.Text = "נבחרו 0 תמונות";
+            // 
             // CopyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 465);
+            this.Controls.Add(this.numberOfSelectedPhotosText);
+            this.Controls.Add(this.numberOfPhotosText);
+            this.Controls.Add(this.collectPhotosProgressBar);
+            this.Controls.Add(this.waitText);
             this.Controls.Add(this.doneBtn);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.getPhotosFromPcBtn);
@@ -99,7 +147,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CopyForm";
-            this.Text = "CopyForm";
+            this.Text = "בחירת תמונות לפיתוח";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -112,5 +160,9 @@
         private System.Windows.Forms.Button getPhotosFromPcBtn;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button doneBtn;
+        private System.Windows.Forms.Label waitText;
+        private System.Windows.Forms.ProgressBar collectPhotosProgressBar;
+        private System.Windows.Forms.Label numberOfPhotosText;
+        private System.Windows.Forms.Label numberOfSelectedPhotosText;
     }
 }

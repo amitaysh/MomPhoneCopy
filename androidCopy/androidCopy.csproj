@@ -64,11 +64,11 @@
     <Compile Include="CopyForm.Designer.cs">
       <DependentUpon>CopyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="diskOnKeyForm.cs">
+    <Compile Include="DiskOnKeyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="diskOnKeyForm.Designer.cs">
-      <DependentUpon>diskOnKeyForm.cs</DependentUpon>
+    <Compile Include="DiskOnKeyForm.Designer.cs">
+      <DependentUpon>DiskOnKeyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WelcomeForm.cs">
       <SubType>Form</SubType>
@@ -84,8 +84,8 @@
     <EmbeddedResource Include="CopyForm.resx">
       <DependentUpon>CopyForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="diskOnKeyForm.resx">
-      <DependentUpon>diskOnKeyForm.cs</DependentUpon>
+    <EmbeddedResource Include="DiskOnKeyForm.resx">
+      <DependentUpon>DiskOnKeyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WelcomeForm.resx">
       <DependentUpon>WelcomeForm.cs</DependentUpon>

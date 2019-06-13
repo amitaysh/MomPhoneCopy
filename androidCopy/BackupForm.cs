@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -11,7 +12,7 @@ namespace androidCopy
         public static string DriveLetter;
         readonly string _toPath = System.Configuration.ConfigurationSettings.AppSettings["BackupToFolder"];
         readonly string _fromPaths = System.Configuration.ConfigurationSettings.AppSettings["BackupFromFolders"];
-        readonly string _fileType = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
+        readonly string _fileTypes = System.Configuration.ConfigurationSettings.AppSettings["PhotosFileType"];
 
         public BackupForm()
         {
@@ -44,34 +45,36 @@ namespace androidCopy
                     continue;
                 progressBar1.Value = 0;
                 var dir = new DirectoryInfo(path);
-                var files = dir.GetFiles(_fileType, SearchOption.AllDirectories);
-                var p = 100.0 / Convert.ToDouble(files.Length);
-                var progressBarValue = Math.Ceiling(p);
-                foreach (var file in files)
+                foreach (var fileType in _fileTypes.Split('|'))
                 {
-                    var duplicate = 1;
-                    if (file.LastWriteTime.Date >= dateTimePicker1.Value)
+                    var files = dir.GetFiles(fileType, SearchOption.AllDirectories);
+                    var p = 100.0 / Convert.ToDouble(files.Length);
+                    var progressBarValue = Math.Ceiling(p);
+                    foreach (var file in files)
                     {
-                        var newFullPath = todayPath.FullName + "\\" + file.Name;
-                        while (File.Exists(newFullPath))
+                        var duplicate = 1;
+                        if (file.LastWriteTime.Date >= dateTimePicker1.Value)
                         {
-                            var tempFileName = $"{Path.GetFileNameWithoutExtension(file.Name)}({duplicate++})";
-                            newFullPath = Path.Combine(todayPath.FullName, tempFileName + file.Extension);
-                        }
+                            var newFullPath = todayPath.FullName + "\\" + file.Name;
+                            while (File.Exists(newFullPath))
+                            {
+                                var tempFileName = $"{Path.GetFileNameWithoutExtension(file.Name)}({duplicate++})";
+                                newFullPath = Path.Combine(todayPath.FullName, tempFileName + file.Extension);
+                            }
 
-                        File.Copy(file.FullName, newFullPath);
-                        if (progressBar1.Value + progressBarValue < 100)
-                            progressBar1.Value += Convert.ToInt32(progressBarValue);
-                        counter++;
+                            File.Copy(file.FullName, newFullPath);
+                            if (progressBar1.Value + progressBarValue < 100)
+                                progressBar1.Value += Convert.ToInt32(progressBarValue);
+                            counter++;
+                        }
                     }
                 }
             }
 
-            var mes = "?אחלה, סיימנו! תכלס אפשר לסגור אם תרצי. לסגור" + Environment.NewLine + $@"גיבינו {counter} תמונות";
-            var res = MessageBox.Show(mes, @"סיימנו!", MessageBoxButtons.YesNo,
+            var mes = "!אחלה! סיימנו לגבות" + Environment.NewLine + $@"גיבינו {counter} תמונות";
+            MessageBox.Show(mes, @"סיימנו!", MessageBoxButtons.OK,
                 MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
-            if (res == DialogResult.Yes)
-                Environment.Exit(1);
+            Close();
         }
 
         private void WaitForUsb()
