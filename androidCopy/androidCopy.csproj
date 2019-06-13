@@ -110,6 +110,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Release\androidCopy.exe.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -118,6 +119,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Image1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Release\androidCopy.exe" />
+    <Content Include="Release\androidCopy.pdb" />
+    <Content Include="Release\System.Management.dll" />
+    <Content Include="Release\System.Management.Instrumentation.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
